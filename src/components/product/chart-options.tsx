@@ -33,7 +33,7 @@ const ChartOptions = (index:number, chartData:[]) => {
             series: [{
                 showInLegend: false,
                 name: 'Price',
-                data: chartData?.map((item: any) => item.price),
+                data: chartData?.map((item: any) => Number(item.price)),
                 // eslint-disable-next-line no-template-curly-in-string
                 format: '${value}',
             }]
@@ -64,7 +64,7 @@ const ChartOptions = (index:number, chartData:[]) => {
             series: [{
                 showInLegend: false,
                 name: 'Quantity',
-                data: chartData?.map((item: any) => item.quantity)
+                data: chartData?.map((item: any) => Number(item.quantity))
             }]
         }
     }

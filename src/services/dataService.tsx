@@ -3,7 +3,9 @@ import { IProduct } from '../models/product';
 import moment from 'moment';
 
 const PRODUCT_KEY = 'wi_products';
-const HISTORY_KEY = 'wi_products_history';
+const PRICE_HISTORY_KEY = 'wi_products_price_history';
+const QUANTITY_HISTORY_KEY = 'wi_products_quantity_history';
+const LANGUAGE_KEY = 'wi_current_language';
 localForage.config({
     driver: [
         localForage.LOCALSTORAGE,
@@ -34,6 +36,9 @@ export async function addProduct(product:IProduct) {
             products = [product];
         }
 
+        setProductPriceHistory(product.id, product.price);
+        setProductQuantityHistory(product.id, product.quantity);
+
         return localForage.setItem(PRODUCT_KEY, products).then((data: any) => {
             if (data) return true;
             return false;
@@ -58,7 +63,8 @@ export async function updateProduct(product: IProduct) {
                 if (item.id === product.id ) {
                     if (item.price !== product.price) {
                         setProductPriceHistory(product.id, product.price);
-                    } else if (item.quantity !== product.quantity) {
+                    } 
+                    if (item.quantity !== product.quantity) {
                         setProductQuantityHistory(product.id, product.quantity);
                     }
                     return product;
@@ -81,6 +87,11 @@ export async function deleteProduct(productID:string) {
         if (products && products.length) {
             const newProducts = products.filter((product: IProduct) => product.id !== productID);
 
+            //deleting the price & quantity history
+            deleteProductPriceHistory(productID);
+            deleteProductQuantityHistory(productID);
+
+
             return localForage.setItem(PRODUCT_KEY, newProducts).then((data: any) => {
                 if (data) return data;
                 return [];
@@ -90,7 +101,7 @@ export async function deleteProduct(productID:string) {
 }
 
 export async function setProductPriceHistory(id:string, price:number) {
-    localForage.getItem(HISTORY_KEY).then((res) => {
+    localForage.getItem(PRICE_HISTORY_KEY).then((res) => {
         let allProductsHistory:any = res;
 
         if (allProductsHistory && allProductsHistory[id]) {
@@ -114,14 +125,14 @@ export async function setProductPriceHistory(id:string, price:number) {
             }
         }
 
-        localForage.setItem(HISTORY_KEY, allProductsHistory).then((res) => {
+        localForage.setItem(PRICE_HISTORY_KEY, allProductsHistory).then((res) => {
             //console.log(res)
         });
     });
 }
 
 export async function getProductPriceHistory(id:string) {
-    return localForage.getItem(HISTORY_KEY).then((res) => {
+    return localForage.getItem(PRICE_HISTORY_KEY).then((res) => {
         let allProductsHistory: any = res;
         if (allProductsHistory && allProductsHistory[id] && allProductsHistory[id].priceHistory) {
             return allProductsHistory[id].priceHistory;
@@ -131,8 +142,21 @@ export async function getProductPriceHistory(id:string) {
     });
 }
 
+/*-------------- Need to work on this ----------------------*/
+export async function deleteProductPriceHistory(id: string) {
+    localForage.getItem(PRICE_HISTORY_KEY).then((data) => {
+        const priceHistory: any = data;
+        console.log(priceHistory[id])
+        if (priceHistory && priceHistory[id]) {
+            const {id, ...newPriceHistory} = priceHistory;
+
+            localForage.setItem(PRICE_HISTORY_KEY, newPriceHistory);
+        }
+    });
+}
+
 export async function setProductQuantityHistory(id:string, quantity:number) {
-    localForage.getItem(HISTORY_KEY).then((res) => {
+    localForage.getItem(QUANTITY_HISTORY_KEY).then((res) => {
         let allProductsHistory: any = res;
         if (allProductsHistory && allProductsHistory[id]) {
             const productHistory = allProductsHistory[id];
@@ -155,14 +179,14 @@ export async function setProductQuantityHistory(id:string, quantity:number) {
             }
         }
 
-        localForage.setItem(HISTORY_KEY, allProductsHistory).then((res) => {
+        localForage.setItem(QUANTITY_HISTORY_KEY, allProductsHistory).then((res) => {
             //console.log(res)
         });
     });
 }
 
 export async function getProductQuantityHistory(id: string) {
-    return localForage.getItem(HISTORY_KEY).then((res) => {
+    return localForage.getItem(QUANTITY_HISTORY_KEY).then((res) => {
         let allProductsHistory: any = res;
         if (allProductsHistory && allProductsHistory[id] && allProductsHistory[id].quantityHistory) {
             return allProductsHistory[id].quantityHistory;
@@ -170,4 +194,31 @@ export async function getProductQuantityHistory(id: string) {
             return null;
         }
     });
+}
+
+/*-------------- Need to work on this ----------------------*/
+export async function deleteProductQuantityHistory(id: string) {
+    localForage.getItem(QUANTITY_HISTORY_KEY).then((data) => {
+        const quantityHistory: any = data;
+
+        if (quantityHistory && quantityHistory[id]) {
+            const { id, ...newQuantityHistory } = quantityHistory;
+
+            localForage.setItem(QUANTITY_HISTORY_KEY, newQuantityHistory);
+        }
+    });
+}
+
+
+export async function getCurrentLanguage() {
+    return localForage.getItem(LANGUAGE_KEY).then((language) => {
+        if (language) {
+            return language;
+        }
+        return 'en';
+    });
+}
+
+export async function setCurrentLanguage(language:string) {
+    localForage.setItem(LANGUAGE_KEY, language)
 }

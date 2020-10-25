@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from "react-router-dom";
 import { addProduct as addProductService, updateProduct as updateProductService, getProduct } from '../../services/dataService';
 import { IProduct } from '../../models/product';
+import { IErrors } from '../../models/error';
 import { getUUID } from '../../utils/utilsFunctions';
 import { useTranslation } from 'react-i18next';
 import { Paper, Container, Button, TextField, FormGroup, FormControl, InputLabel, Select, MenuItem, FormControlLabel, Checkbox, Typography } from '../../material.components';
@@ -23,7 +24,7 @@ export default function ProductForm() {
     const history = useHistory();
     const classes = useStyles();
     const { t: translate } = useTranslation();
-    const [errors, setErrors] = useState<any>({
+    const [errors, setErrors] = useState <IErrors>({
         name: '',
         ean: '',
         type: '',
@@ -35,128 +36,89 @@ export default function ProductForm() {
 
     const isInvalid = product.name === '' || product.ean === '' || product.type === '' || product.weight === '' || product.color === '';
 
+    /**
+    * Product form submit handler.
+    * @remarks
+    * Checks if the form values are valid
+    * Checks if the `id` param is available in the `history` object
+    * If the `id` is undefined, creates a new product. Otherwise, update the existing product
+    *
+    * @returns Void
+    */
     function formSubmit(event:React.FormEvent) {
         event.preventDefault();
         if (!isInvalid) {
             
             if (!id) {
-                addProduct(product);
+                addProductService(product).then(() => {
+                    setTimeout(function () {
+                        history.push("/products");
+                    }, 100);
+                });
             } else {
-                updateProduct(product);
+                updateProductService(product).then(() => {
+                    setTimeout(function () {
+                        history.goBack();
+                    }, 100);
+                });
             }
         }
     };
 
-    function addProduct(productObj:IProduct) {
-        addProductService(productObj).then(() => {
-            setTimeout(function () {
-                history.push("/products");
-            }, 100);
-        });
-    };
+    /**
+    * Form `onChange` event handler
+    * @remarks
+    * Runs everytime when the value of any field changes 
+    * Converts the value of `price` and `quantity` fields to Number
+    * Sets the fields value to the local state
+    *
+    * @returns Void
+    */
 
-    function updateProduct(productObj:any) {
-        updateProductService(productObj).then(() => {
-            // console.log('Product updated', res);
-            setTimeout(function () {
-                history.goBack();
-            }, 100);
-        })
-    };
+    function updateProductField(event: React.ChangeEvent<any>) {
+        const field = event.target;
 
-    function updateProductField(event:React.ChangeEvent<any>) {
-        const { name } = event.target;
-        let { value } = event.target;
-        switch (name) {
-            case 'price':
-                value = Number(value);
-                break;
-            case 'quantity':
-                value = Number(value);
-                break;
-            case 'active':
-                value = event.target.checked;
-                break;
-        
-            default:
-                break;
+        if (field.name === 'active') {
+            setProduct((product: IProduct) => ({ ...product, [field.name]: field.checked }));
+        } else {
+            setProduct((product: IProduct) => ({ ...product, [field.name]: field.value }));
         }
-        setProduct((product: IProduct) => ({ ...product, [name]: value}));
     };
-    
-    /*--------- Validate a field on Blur Event -------------*/
+
+
+    /**
+    * Form Validator - Form fields `onBlur` event handler
+    * @remarks
+    * Runs everytime when a field is blurred and checks if valid data has been provided
+    * The `name`, `ean`, `weight`, `color`, 'price` & `quantity` fields are required and shows an error if they are left empty
+    * Sets the fields value to the local state
+    *
+    * @returns Void
+    */
     function validateForm(event: React.FocusEvent<HTMLInputElement>) {
         const { name, value } =event.target;
 
-        switch (name) {
-            case 'name':
-                setProduct((prevProd) => ({ ...prevProd, name: value.trim() }));
-                if (value.trim().length === 0) {
-                    setErrors({...errors, name: 'Name can\'t be empty'});
-                } else {
-                    setErrors({ ...errors, name: '' });
-                }
-                break;
-
-            case 'ean':
-                setProduct((prevProd) => ({ ...prevProd, ean: value.trim() }));
-                if (value.trim().length === 0) {
-                    setErrors({ ...errors, ean: 'Ean can\'t be empty' });
-                } else {
-                    setErrors({ ...errors, ean: '' });
-                }
-                break;
-
-            case 'weight':
-                setProduct((prevProd) => ({ ...prevProd, weight: value.trim() }));
-                if (value.trim().length === 0) {
-                    setErrors({ ...errors, weight: 'Weight can\'t be empty' });
-                } 
-                else if (isNaN(parseFloat(value))) {
-                    setErrors({ ...errors, weight: 'Only numbers are allowed' });
-                } else {
-                    setErrors({ ...errors, weight: '' });
-                }
-                break;
-
-            case 'color':
-                setProduct((prevProd) => ({ ...prevProd, color: value.trim() }));
-                if (value.trim().length === 0) {
-                    setErrors({ ...errors, color: 'Color can\'t be empty' });
-                } 
-                else if (value.match(/^[a-zA-Z]+$/) === null) {
-                    setErrors({ ...errors, color: 'Only alphabets are allowed' });
-                } else {
-                    setErrors({ ...errors, color: '' });
-                }
-                break;
-
-            case 'price':
-                setProduct((prevProd) => ({ ...prevProd, price: Number(value.trim()) }));
-                if (value.trim().length === 0) {
-                    setErrors({ ...errors, price: 'Price can\'t be empty' });
-                }
-                else if (isNaN(parseFloat(value))) {
-                    setErrors({ ...errors, price: 'Only numbers are allowed' });
-                } else {
-                    setErrors({ ...errors, price: '' });
-                }
-                break;
-
-            case 'quantity':
-                setProduct((prevProd) => ({ ...prevProd, quantity: Math.round(Number(value.trim())) }));
-                if (value.trim().length === 0) {
-                    setErrors({ ...errors, quantity: 'Qunatity can\'t be empty' });
-                }
-                else if (isNaN(parseInt(value))) {
-                    setErrors({ ...errors, quantity: 'Only numbers are allowed' });
-                } else {
-                    setErrors({ ...errors, quantity: '' });
-                }
-                break;
-        
-            default:
-                break;
+        if (name === 'name' || name === 'ean' || name === 'weight' || name === 'color' || name === 'price' || name === 'quantity') {
+            setProduct((prevProd) => ({ ...prevProd, [name]: value.trim() }));
+            if (value.trim().length === 0) {
+                setErrors({ ...errors, [name]: `${name} can't be empty` });
+            } else {
+                setErrors({ ...errors, [name]: '' });
+            }
+        }
+        if (name === 'weight' || name === 'price' || name === 'quantity') {
+            if (isNaN(Number(value))) {
+                setErrors({ ...errors, [name]: 'Only numbers are allowed' });
+            } else {
+                setErrors({ ...errors, [name]: '' });
+            }
+        }
+        if (name === 'color') {
+            if (value.match(/^[a-zA-Z]+$/) === null) {
+                setErrors({ ...errors, color: 'Only alphabets are allowed' });
+            } else {
+                setErrors({ ...errors, color: '' });
+            }
         }
     }
 
@@ -171,8 +133,8 @@ export default function ProductForm() {
             });
 
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    
+    }, [id, history]);
 
     return (
         <>
@@ -224,7 +186,7 @@ export default function ProductForm() {
                             />
                         </FormControl>
                         <FormControl className={classes.mb2}>
-                            <TextField label={translate('productList.tableHeaders.price')} name="price" type="number" required value={product.price}
+                            <TextField label={translate('productList.tableHeaders.price')} name="price" type="number" value={product.price}
                                 onChange={updateProductField}
                                 onBlur={validateForm}
                                 error={errors.price.length > 0}
@@ -232,7 +194,7 @@ export default function ProductForm() {
                             />
                         </FormControl>
                         <FormControl className={classes.mb2}>
-                            <TextField label={translate('productList.tableHeaders.quantity')} name="quantity" type="number" required 
+                            <TextField label={translate('productList.tableHeaders.quantity')} name="quantity" type="number" 
                                 value={product.quantity}
                                 onChange={updateProductField}
                                 onBlur={validateForm}
