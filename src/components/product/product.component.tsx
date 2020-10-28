@@ -17,7 +17,7 @@ export default function Product() {
     const [priceHistory, setPriceHistory] = useState<[] | null>(null);
     const [quantityHistory, setQuantityHistory] = useState<[] | null>(null);
     const [chartOptions, setChartOptions] = useState<any>(null);
-    const { id } = useParams<{id:string}>(); // Product ID from URL
+    const { id } = useParams<{id:string}>();
     const history = useHistory();
     const [openTab, setOpenTab] = React.useState(0);
     const classes = useStyles();
@@ -60,7 +60,7 @@ export default function Product() {
             <div className={classes.wrapper}>
                 <Typography variant="h5" align="center" style={{ marginBottom: 20 }}>{translate('product.pageTitle')}</Typography>
                 <Card>
-                    {/*---- Product Tabs section -------*/} 
+
                     <Tabs
                         value={openTab}
                         indicatorColor="primary"
@@ -73,12 +73,12 @@ export default function Product() {
                         <Tab label={translate('product.quantityTab')} tabIndex={2} />
                     </Tabs>
 
-                    {/*---- Product Details Component -------*/} 
+
                     <TabPanel value={openTab} index={0}>
                         <ProductDetails product={product} />
                     </TabPanel>
 
-                    {/*---- Product Price History Component -------*/} 
+
                     <TabPanel value={openTab} index={1}>
                         {priceHistory ? (
                             <ProductChart chartOptions={chartOptions} />
@@ -87,7 +87,7 @@ export default function Product() {
                         )}
                     </TabPanel>
                     
-                    {/*---- Product Quantity History Component -------*/} 
+ 
                     <TabPanel value={openTab} index={2}>
                         {quantityHistory ? (
                             <ProductChart chartOptions={chartOptions} />
@@ -97,7 +97,7 @@ export default function Product() {
                     </TabPanel>
 
 
-                    {/*---- Product Footer CTA -------*/} 
+
                     <CardActions disableSpacing>
                         <div className={classes.btnContainer}>
 
