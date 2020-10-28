@@ -9,6 +9,7 @@ import Tab from '@material-ui/core/Tab';
 import { Button, Card, CardContent, CardActions, Typography } from '../../material.components';
 import useStyles from './styles';
 import ChartOptions from './chart-options';
+import { IChartOptions } from '../../models/chart';
 
 
 
@@ -16,21 +17,33 @@ export default function Product() {
     const [product, setProduct] = useState<IProduct | null>(null);
     const [priceHistory, setPriceHistory] = useState<[] | null>(null);
     const [quantityHistory, setQuantityHistory] = useState<[] | null>(null);
-    const [chartOptions, setChartOptions] = useState<any>(null);
+    const [chartOptions, setChartOptions] = useState<IChartOptions | null>(null);
     const { id } = useParams<{id:string}>();
     const history = useHistory();
     const [openTab, setOpenTab] = React.useState(0);
     const classes = useStyles();
     const { t: translate } = useTranslation();
 
+
+    /**
+    * Product Detail tabs switch handler
+    * @remarks
+    * 0: details tab, 1: price history tab, 2: quantity history tab
+    * If price history or quantity history tab is selected
+    * chart-options will be prepared with the relative data
+    *
+    * @param1 - event: onChange event
+    * @param2 - Index of clicked tab
+    * @returns Void
+    */
     function switchTab(event: React.ChangeEvent<{}>, tabIndex: number) {
         setOpenTab(tabIndex);
         if (tabIndex === 1 && priceHistory) {
-            const options = ChartOptions(tabIndex, priceHistory);
+            const options: IChartOptions = ChartOptions(tabIndex, priceHistory);
             setChartOptions(options);
 
         } else if (tabIndex === 2 && quantityHistory) {
-            const options = ChartOptions(tabIndex, quantityHistory);
+            const options: IChartOptions = ChartOptions(tabIndex, quantityHistory);
             setChartOptions(options);
         }
     };

@@ -1,8 +1,9 @@
 import moment from 'moment';
+import { IChartOptions } from '../../models/chart'
 
 const ChartOptions = (index:number, chartData:[]) => {
 
-    const options = {
+    const options: IChartOptions = {
         chart: {
             type: 'line'
         },
