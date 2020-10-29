@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import { ProductsList, Product, ProductForm, LanguageSelector } from './components';
 import { Container } from './material.components';
-import './i18n/i18n'
+import './i18n/i18n';
 
 export default function App() {
   return (

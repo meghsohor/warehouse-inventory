@@ -23,7 +23,9 @@ export default makeStyles((theme: Theme) =>
         },
         actionsContainer: {
             '& > *': {
-                marginLeft: '5px'
+                marginLeft: '3px',
+                marginRight: '3px',
+                marginBottom: '5px'
             }
         },
         conf_modal: {

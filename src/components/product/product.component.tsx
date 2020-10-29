@@ -50,7 +50,6 @@ export default function Product() {
     
     useEffect(() => {
         if (id) {
-            /*---- Fetching product from Service -------*/ 
             getProduct(id).then((res) => {
                 if (res) {
                     setProduct(res);
@@ -58,10 +57,9 @@ export default function Product() {
                     history.push('/');
                 }
             });
-            /*---- Fetching product price history from Service -------*/ 
+
             getProductPriceHistory(id).then((res) => setPriceHistory(res));
 
-            /*---- Fetching product quantity history from Service -------*/ 
             getProductQuantityHistory(id).then((res) => setQuantityHistory(res));
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps

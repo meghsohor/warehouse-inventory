@@ -22,11 +22,31 @@ export default function ProductsList() {
         })
     }, []);
 
+    /**
+    * Show product delete confirmation modal
+    * @remarks
+    * Clicking on the delete button of a product will open a modal
+    *
+    * @param1 - product id
+    * @returns Void
+    */
     function confirmDelete(productId: IProduct["id"]) {
         setActiveProductID(productId);
         setOpenModal(true);
     }
 
+    /**
+    * Delete product
+    * @remarks
+    * when a user click the Delete button in the modal
+    * checks the active product id
+    * calls the Delete Product method from the service 
+    * gets the updated product list and sets to state
+    * closes the modal
+    * resets the value of active product id  
+    *
+    * @returns Void
+    */
     function deleteProduct() {
         if (activeProductID && products.length) {
             deleteProductService(activeProductID).then((res) => {
@@ -37,6 +57,15 @@ export default function ProductsList() {
         }
     }
 
+    /**
+    * Update product active state
+    * @remarks
+    * Clicking on the checkbox of a product from the product list table
+    * will update the active state of the product
+    *
+    * @param1 - product id
+    * @returns Void
+    */
     function updateActive(id: IProduct["id"]) {
         const newProducts = products.map((item: IProduct) => item.id === id ? ({ ...item, active: !item.active }) : item);
         updateProducts(newProducts).then((res) => {
@@ -44,6 +73,14 @@ export default function ProductsList() {
         })
     }
 
+    /**
+    * Modal Container
+    * @remarks
+    * Two click event handlers:
+    * will update the active state of the product
+    * setOpenModal: closes the modal
+    * deleteProduct: Sends delete request and closes the modal
+    */
     const modalContent = (
         <Card className={classes.conf_modal}>
             <CardContent>
