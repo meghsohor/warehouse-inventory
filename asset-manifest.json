@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.js": "/warehouse-inventory/static/js/main.0d708be1.chunk.js",
+    "main.js.map": "/warehouse-inventory/static/js/main.0d708be1.chunk.js.map",
+    "runtime-main.js": "/warehouse-inventory/static/js/runtime-main.8ac487d8.js",
+    "runtime-main.js.map": "/warehouse-inventory/static/js/runtime-main.8ac487d8.js.map",
+    "static/js/2.cb20d29d.chunk.js": "/warehouse-inventory/static/js/2.cb20d29d.chunk.js",
+    "static/js/2.cb20d29d.chunk.js.map": "/warehouse-inventory/static/js/2.cb20d29d.chunk.js.map",
+    "index.html": "/warehouse-inventory/index.html",
+    "precache-manifest.2d32d1463fdd7859b1823a35f5d7c13a.js": "/warehouse-inventory/precache-manifest.2d32d1463fdd7859b1823a35f5d7c13a.js",
+    "service-worker.js": "/warehouse-inventory/service-worker.js",
+    "static/js/2.cb20d29d.chunk.js.LICENSE.txt": "/warehouse-inventory/static/js/2.cb20d29d.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.8ac487d8.js",
+    "static/js/2.cb20d29d.chunk.js",
+    "static/js/main.0d708be1.chunk.js"
+  ]
+}

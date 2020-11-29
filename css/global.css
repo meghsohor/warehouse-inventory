@@ -1,0 +1,44 @@
+@import url('/css/normalize.css');
+
+*, *:before, *:after {
+  box-sizing: border-box;
+  outline: none !important;
+}
+
+html, body {
+  height: 100%;
+}
+html {
+  line-height: 1.15; /* 1 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  padding-top: 40px;
+}
+.page-container {
+  flex: auto;
+  flex-direction: column;
+  display: flex;
+}
+.language-switcher {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
