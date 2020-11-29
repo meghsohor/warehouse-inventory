@@ -25,7 +25,8 @@ export default function App() {
               <Route path="/products" exact>
                 <ProductsList />
               </Route>
-              <Redirect to="/products" />
+              <Redirect path="*" to="/products" />
+              {/* <Redirect to="/products" /> */}
             </Switch>
           </Router>
         </Container>
