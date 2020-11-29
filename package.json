@@ -2,6 +2,7 @@
   "name": "inventory-react",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://meghsohor.github.io/warehouse-inventory",
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/data-grid": "^4.0.0-alpha.6",
@@ -14,6 +15,7 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-router-dom": "^5.1.6",
+    "gh-pages": "^3.1.0",
     "highcharts": "^8.2.0",
     "highcharts-react-official": "^3.0.0",
     "i18next": "^19.8.2",
@@ -31,7 +33,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
